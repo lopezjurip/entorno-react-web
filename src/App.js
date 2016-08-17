@@ -1,26 +1,29 @@
 import React, { Component } from 'react';
+import moment from 'moment';
 
 class App extends Component {
 
   constructor(props) {
     super(props);
     this.state = {
-      comments: [{
-        id: 1,
-        title: 'Heya',
-        body: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
-      }],
+      comments: [],
     };
+  }
+
+  componentDidMount() {
+    fetch('http://localhost:3000/comments')
+      .then(result => result.json())
+      .then(comments => this.setState({ comments }));
   }
 
   render() {
     return (
-      <div className="App">
+      <div className="container">
         <h1>Lista de comentarios:</h1>
         <ul>
           {this.state.comments.map(comment => (
             <li key={comment.id}>
-              <h3>{comment.title}</h3>
+              <h3>{comment.title} <small>{moment(comment.created_at).fromNow()}</small></h3>
               <p>{comment.body}</p>
             </li>
           ))}
